@@ -1,3 +1,5 @@
+import Synchronization.Counter;
+
 public class MyThread extends  Thread{
     private Counter counter;
     public MyThread(Counter counter){
