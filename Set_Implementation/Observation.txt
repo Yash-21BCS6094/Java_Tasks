@@ -1,0 +1,11 @@
+Categories 	            LinkedHashMap	                  LinkedHashSet
+Operation	    Used to store key-value pairs.	        Used to store collection of things
+
+Duplicates	    Take unique id no duplicate
+                keys but can take duplicate values 	    Stores no duplicate element
+
+Implements	    HashMap	                                HashSet
+
+Example	        Map<String, Integer> lhm
+            = new LinkedHashMap<String, Integer>() 	    Set<String> lhs
+                                                        = new LinkedhashSet<String>();

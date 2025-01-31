@@ -1,0 +1,10 @@
+Feature         ArrayList           LinkedList          Vector          Stack
+Underlying DS   Dynamic Array       Doubly Linked List  Dynamic Array   Vector
+Random Access   Fast O(1)           Slow O(n)           O(1)            O(1)
+
+Insertion/
+Deletion        Slow O(n)           Fast O(1)           Slow O(n)        N/A
+
+Thread Safety   No                  No                  Yes              Yes
+
+LIFO Safety     No                  No                  No               Yes
