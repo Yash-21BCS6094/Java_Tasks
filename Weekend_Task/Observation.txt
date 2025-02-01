@@ -1,0 +1,11 @@
+Key Components:-
+
+TicketCounter -> Manage ticket availabilty and booking logic
+
+Booking Request -> Represents a customer's will to book
+
+Blocking Queue -> Stores booking queue for synchronized access
+
+Producers (Customer Threads) -> Add booking request to the queue
+
+Consumers (TicketCounter Threads) -> Process booking request
