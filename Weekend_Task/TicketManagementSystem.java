@@ -1,38 +1,93 @@
 package Weekend_Task;
 
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class TicketManagementSystem {
     public static void main(String[] args) {
         TicketCounter ticketCounter = new TicketCounter();
-        BlockingQueue<BookingRequest> que = new LinkedBlockingQueue<>(10);
+        BlockingQueue<BookingRequest> queue = new LinkedBlockingQueue<>(10);
+        Vector<Customer> customers = new Vector<>();
+        Scanner scanner = new Scanner(System.in);
 
-        // Start consumer thread
-        TicketProcessor tktProcessor = new TicketProcessor(ticketCounter, que);
-        Thread processor = new Thread(tktProcessor);
+        TicketProcessor ticketProcessor = new TicketProcessor(ticketCounter, queue);
+        ticketProcessor.start();
 
-        // Thread of customers
-        Thread[] customers = new Thread[]{
-                new Customer("Yash", 1, que),
-                new Customer("Sumit", 2, que),
-                new Customer("Amandeep", 12, que),
-                new Customer("Pankaj", 5, que),
-        };
+        System.out.println("Welcome to Big-Oh Ticketing Service System");
 
-        for(Thread customer: customers){
-            customer.start();
+        boolean running = true;
+        while (running) {
+            System.out.println("\nOptions:");
+            System.out.println("1. Add New Customer");
+            System.out.println("2. Set Tickets Available");
+            System.out.println("3. Start Execution and Process Requests");
+            System.out.println("4. Exit");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Customer Name: ");
+                    String customerName = scanner.nextLine();
+                    System.out.print("Enter Number of Tickets to Book: ");
+                    int tickets = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    Customer newCustomer = new Customer(customerName, tickets, queue);
+                    customers.add(newCustomer);
+                    newCustomer.start();
+                    break;
+
+                case 2:
+                    System.out.print("Enter the New Number of Available Tickets: ");
+                    int newTickets = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    ticketCounter.setAvailableTickets(newTickets);
+                    break;
+
+                case 3:
+                    System.out.println("Processing all booking requests...");
+                    running = false; // Stop taking new inputs
+                    break;
+
+                case 4:
+                    System.out.println("Exiting the system.");
+                    running = false;
+                    break;
+
+                default:
+                    System.out.println("Invalid choice, please try again.");
+            }
         }
 
-        for(Thread customer: customers){
-            try{
+        // Wait for all customers to finish
+        for (Customer customer : customers) {
+            try {
                 customer.join();
-            }catch(InterruptedException e){
+            } catch (InterruptedException e) {
                 System.out.println(e);
             }
         }
 
-        processor.interrupt();
+        // Allow ticket processor to finish processing remaining requests
+        while (!queue.isEmpty()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
+        // Stop ticket processor safely
+        ticketProcessor.stopProcessing();
+        try {
+            ticketProcessor.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("All bookings processed. System shutting down.");
+        scanner.close();
     }
 }
