@@ -36,7 +36,7 @@ public class TicketManagementSystem {
                     scanner.nextLine(); // Consume newline
                     Customer newCustomer = new Customer(customerName, tickets, queue);
                     customers.add(newCustomer);
-                    newCustomer.start();
+//                    newCustomer.start();
                     break;
 
                 case 2:
@@ -48,6 +48,9 @@ public class TicketManagementSystem {
 
                 case 3:
                     System.out.println("Processing all booking requests...");
+                    for(Customer currCustomer: customers){
+                        currCustomer.start();
+                    }
                     running = false; // Stop taking new inputs
                     break;
 
