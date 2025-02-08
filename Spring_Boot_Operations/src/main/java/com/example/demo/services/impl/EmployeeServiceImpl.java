@@ -8,6 +8,8 @@ import com.example.demo.repositories.EmployeeRepository;
 import com.example.demo.services.EmployeeService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -33,15 +35,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmployeeDTO> getAllEmplyees() {
-        List<Employee> employees = employeeRepository.findAll();
-        return employees.stream().map((employee) -> EmployeeMapper.mapToEmployeeDTO(employee)).collect(Collectors.toUnmodifiableList());
+    public Page<EmployeeDTO> getAllEmplyees(Pageable pageable) {
+        Page<EmployeeDTO> employees = employeeRepository.findAll(pageable).map((employee) -> EmployeeMapper.mapToEmployeeDTO(employee));
+        return employees;
     }
+
 
     @Override
     public EmployeeDTO updateEmployee(Long employeeId, EmployeeDTO updatedEmployee) {
         Employee employee = employeeRepository.findById(employeeId).orElseThrow(
-                () -> new ResourceNotFoundException("Cannot find the user")
+                () -> new ResourceNotFoundException("User does not exit")
         );
         employee.setId(updatedEmployee.getId());
         employee.setName(updatedEmployee.getName());

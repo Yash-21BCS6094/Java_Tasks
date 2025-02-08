@@ -4,6 +4,9 @@ import com.example.demo.dto.EmployeeDTO;
 import com.example.demo.services.EmployeeService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +37,9 @@ public class EmployeeController {
 
     // GET all of them
     @GetMapping
-    public ResponseEntity<List<EmployeeDTO>> getAllEmployees(){
-        List<EmployeeDTO> employees = employeeService.getAllEmplyees();
-        return ResponseEntity.ok(employees);
+    public ResponseEntity<Page<EmployeeDTO>> getAllEmployees(@PageableDefault(page = 1, size = 2) Pageable pageable){
+        Page<EmployeeDTO> employeeDTOPage = employeeService.getAllEmplyees(pageable);
+        return ResponseEntity.ok(employeeDTOPage);
     }
 
     @PutMapping("{id}")

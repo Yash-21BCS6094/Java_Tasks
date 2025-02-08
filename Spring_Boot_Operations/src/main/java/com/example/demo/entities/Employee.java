@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,9 +16,12 @@ public class Employee {
     private Long id;
 
     @Column(name = "name")
+    @NotNull(message = "Enter a valid name")
     private  String name;
 
+
     @Column(name = "role")
+    @NotNull(message = "Enter a valid role")
     private String role;
 
     public Employee(){}
